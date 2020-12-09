@@ -1,0 +1,20 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: user-registration
+spec:
+  template:
+    metadata:
+      name: user-registration-v3
+      annotations:
+        # Target 10 in-flight-requests per pod.
+        autoscaling.knative.dev/target: "10"
+    spec:
+      containers:
+        - image: quay.io/microcks/quarkus-user-registration:0.1
+          name: user-container
+          ports:
+            - containerPort: 8383
+          env:
+            - name: QUARKUS_PROFILE
+              value: kube
